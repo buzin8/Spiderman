@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111112">
+  <meta name="description" content="Your friendly neighborhood Spider-Man swings into action in Spider-Man: Homecoming.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+  <title>Spider-Man: Homecoming | Marvel Studios</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --black: #111112;
+      --panel: #19191b;
+      --red: #ed1d24;
+      --white: #f7f5f2;
+      --muted: #a7a4a1;
+      --line: #363436;
+      font-family: "Orbitron", sans-serif;
+      background: var(--black);
+      color: var(--white);
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; scroll-behavior: smooth; }
+    body { margin: 0; min-height: 100vh; }
+    button, a { color: inherit; font: inherit; }
+    a { text-decoration: none; }
+    button { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 2px solid white; outline-offset: 5px; }
+    .wrap { width: min(100% - 64px, 1320px); margin-inline: auto; }
+
+    header {
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(90deg, rgba(8, 8, 10, 0.98) 0%, rgba(16, 7, 12, 0.94) 34%, rgba(35, 6, 12, 0.6) 44%, rgba(10, 5, 8, 0.15) 50%, transparent 56%);
+    }
+
+    .utility-bar {
+      min-height: 64px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+    }
+    .utility-link, .nav-link {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .utility-link { color: #d9d6d4; }
+    .marvel-logo {
+      display: grid;
+      width: 105px;
+      height: 43px;
+      place-items: center;
+      background: var(--red);
+      font-size: 19px;
+      font-weight: 1000;
+      letter-spacing: 0;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .utility-right { display: flex; align-items: center; justify-self: end; gap: 22px; }
+    .subscribe { display: flex; align-items: center; gap: 9px; }
+    .subscribe-mark { color: var(--red); font-size: 20px; }
+    .search-mark { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; position: relative; }
+    .search-mark::after { content: ""; width: 7px; height: 2px; background: white; position: absolute; right: -5px; bottom: -3px; transform: rotate(48deg); }
+    .main-nav { min-height: 48px; display: flex; justify-content: center; align-items: center; gap: clamp(19px, 3.5vw, 48px); border-bottom: 1px solid var(--line); }
+    .nav-link { position: relative; padding: 17px 0 15px; }
+    .nav-link::after { content: ""; height: 2px; background: var(--red); position: absolute; right: 0; bottom: 0; left: 0; transform: scaleX(0); transition: transform .2s ease; }
+    .nav-link:hover::after, .nav-link[aria-current="page"]::after { transform: scaleX(1); }
+
+    .hero {
+      position: relative;
+      min-height: min(680px, calc(100svh - 151px));
+      display: grid;
+      grid-template-columns: .92fr 1.08fr;
+      overflow: hidden;
+      isolation: isolate;
+      perspective: 1600px;
+      transform-style: preserve-3d;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero::before, .hero::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      background-position: 72% center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transition: transform .9s cubic-bezier(.2,.75,.2,1);
+    }
+    .hero::before { background-image: url("homecoming.jpg"); }
+    .hero::after { background-image: url("https://images.wallpapersden.com/image/download/4k-spider-man-brand-new-day-movie_bmhoaGiUmZqaraWkpJRobWllrWdma2U.jpg"); transform: rotateY(-180deg); background-position: center; }
+    .hero.is-brand-new-day::before { transform: rotateY(180deg); }
+    .hero.is-brand-new-day::after { transform: rotateY(0deg); }
+
+    .galaxy-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: clamp(35px, 6vw, 90px);
+      background: transparent;
+    }
+    .eyebrow { margin: 0 0 25px; color: #d0ccc8; font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+    .eyebrow b { color: var(--red); }
+    h1 { margin: 0; max-width: 590px; font-size: clamp(29px, 4vw, 60px); font-weight: 900; line-height: .82; letter-spacing: -.075em; text-transform: uppercase; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9); }
+    h1 span { display: block; white-space: nowrap; }
+    h1 span:first-child { letter-spacing: 0; }
+    h1 .red-title {
+      color: var(--red);
+      letter-spacing: calc(-0.075em + 2px);
+      opacity: 0;
+      user-select: none;
+    }
+    .title-rule { width: 55px; height: 4px; margin: 26px 0 18px; background: var(--red); box-shadow: 0 0 15px rgba(237, 29, 36, 0.6); }
+    .film-meta { margin: 0; color: #e8e5e2; font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+    .synopsis { max-width: 390px; margin: 22px 0 28px; color: #d5d1ce; font-size: 15px; line-height: 1.75; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85); }
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 13px; }
+    .button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      padding: 0 19px;
+      border: 1px solid var(--red);
+      background: var(--red);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 18px rgba(237, 29, 36, 0.35);
+      transition: background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .button:hover { background: #ff353b; border-color: #ff353b; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(237, 29, 36, 0.6); }
+    .button.secondary { border-color: #777; background: rgba(17, 17, 18, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4); }
+    .button.secondary:hover { border-color: white; background: white; color: #111; box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3); }
+    .play-icon { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid currentColor; }
+
+    .hero-art {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      padding: 45px clamp(20px, 5vw, 70px);
+      background: transparent;
+    }
+    .art-glow { display: none; }
+    .art-caption { position: absolute; z-index: 2; top: 27px; left: 30px; color: #ffffff91; font-size: 9px; font-weight: 700; letter-spacing: .19em; text-transform: uppercase; }
+    .flip-card {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      transition: none;
+    }
+    .flip-card:focus-visible { outline-offset: 8px; }
+    .card-face { display: none; }
+    .flip-hint { position: absolute; z-index: 2; right: 30px; bottom: 24px; color: #ffffff94; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
+    .flip-hint span { color: var(--red); }
+
+    .below-hero { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 76px; }
+    .below-hero p { margin: 0; color: #aaa6a4; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .below-hero b { color: white; }
+    .film-section { border-top: 1px solid var(--line); background: #171719; }
+    .film-inner { display: grid; grid-template-columns: .75fr 1.25fr; gap: 50px; padding-block: 72px; }
+    .section-label { margin: 0 0 16px; color: var(--red); font-size: 10px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+    h2 { margin: 0; font-size: clamp(35px, 5vw, 64px); line-height: .92; letter-spacing: -.06em; text-transform: uppercase; }
+    .film-copy { max-width: 620px; color: #bdb9b6; font-size: 14px; line-height: 1.85; }
+    .film-copy p { margin: 0 0 18px; }
+    footer { border-top: 1px solid var(--line); padding-block: 25px; color: #8f8b88; font-size: 9px; font-weight: 700; letter-spacing: .13em; text-align: center; text-transform: uppercase; }
+
+    @media (min-width: 761px) and (max-width: 1100px) {
+      h1 { font-size: clamp(26px, 3.6vw, 40px); }
+    }
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 36px, 1320px); }
+      .utility-bar { min-height: 59px; }
+      .marvel-logo { width: 89px; height: 37px; font-size: 16px; }
+      .utility-link, .subscribe { font-size: 9px; }
+      .utility-right { gap: 15px; }
+      .main-nav { gap: clamp(12px, 4vw, 28px); overflow: auto; justify-content: flex-start; padding-inline: 18px; }
+      .nav-link { flex: 0 0 auto; font-size: 9px; }
+      .stream-banner { min-height: 34px; font-size: 8px; }
+      .hero { min-height: 0; grid-template-columns: 1fr; }
+      .hero-copy { min-height: 430px; padding: 50px max(22px, 7vw) 38px; }
+      h1 { font-size: clamp(42px, 10.2vw, 78px); }
+      .synopsis { max-width: 440px; font-size: 14px; }
+      .hero-art { min-height: 360px; padding: 54px 24px 55px; }
+      .art-caption { top: 20px; left: 20px; }
+      .flip-hint { right: 20px; bottom: 20px; }
+      .below-hero { min-height: 68px; }
+      .below-hero p { font-size: 8px; }
+      .film-inner { grid-template-columns: 1fr; gap: 24px; padding-block: 48px; }
+    }
+    @media (max-width: 420px) {
+      .utility-link:first-child { display: none; }
+      .utility-right { gap: 8px; }
+      .subscribe { max-width: min(112px, calc(50vw - 86px)); line-height: 1.35; }
+      .hero-copy { min-height: 400px; }
+      .eyebrow { font-size: 8px; }
+      h1 { font-size: clamp(31px, 9.8vw, 38px); }
+      .synopsis { font-size: 13px; }
+      .button { min-height: 44px; padding-inline: 13px; font-size: 9px; }
+      .hero-art { min-height: 285px; padding-inline: 18px; }
+      .card-back { padding: 18px; }
+      .back-copy { font-size: 10px; }
+      .front-tag { left: 12px; bottom: 12px; font-size: 8px; }
+      .below-hero { align-items: flex-start; flex-direction: column; justify-content: center; gap: 7px; min-height: 70px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="utility-bar wrap">
+      <a class="utility-link" href="#story">Log in</a>
+      <a class="marvel-logo" href="#top" aria-label="Marvel home">MARVEL</a>
+      <div class="utility-right">
+        <a class="utility-link subscribe" href="#watch"><span class="subscribe-mark" aria-hidden="true">▰</span>Marvel Unlimited</a>
+        <span class="search-mark" aria-hidden="true"></span>
+      </div>
+    </div>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="nav-link" href="#story">News</a>
+      <a class="nav-link" href="#story">Comics</a>
+      <a class="nav-link" href="#story">Characters</a>
+      <a class="nav-link" href="#story">Games</a>
+      <a class="nav-link" href="#top">Movies</a>
+      <a class="nav-link" href="#watch">TV shows</a>
+      <a class="nav-link" href="#story">More</a>
+    </nav>
+  </header>
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas id="galaxy-canvas" class="galaxy-canvas" aria-hidden="true"></canvas>
+      <div class="hero-copy">
+        <p class="eyebrow"><b>Marvel Studios</b> &nbsp; / &nbsp; A hero is in the making</p>
+        <h1 id="hero-title"><span>Spider-Man</span><span class="red-title" id="film-title">Homecoming</span></h1>
+        <div class="title-rule" aria-hidden="true"></div>
+        <p class="film-meta">The suit. The city. The responsibility.</p>
+        <p class="synopsis">Peter Parker is finding his way as a hero. With the city in danger and the world watching, he’s ready to prove that a friendly neighborhood Spider-Man can make a difference.</p>
+        <div class="actions">
+          <a class="button" href="#watch"><span class="play-icon" aria-hidden="true"></span>Watch the trailer</a>
+          <a class="button secondary" href="#story">Explore the story</a>
+        </div>
+      </div>
+      <div class="hero-art" id="watch">
+        <span class="art-caption">Queens, New York &nbsp; / &nbsp; Friendly neighborhood</span>
+        <button class="flip-card" id="flip-card" type="button" aria-pressed="false" aria-label="Switch the background between Spider-Man listening to music and Brand New Day artwork."></button>
+        <span class="flip-hint"><span>↻</span> &nbsp; Move here to switch scene</span>
+      </div>
+    </section>
+    <div class="below-hero wrap">
+      <p><b>Spider-Man:</b> Homecoming</p>
+      <p>With great power comes great responsibility.</p>
+    </div>
+    <section class="film-section" id="story" aria-labelledby="story-title">
+      <div class="film-inner wrap">
+        <div>
+          <p class="section-label">A new hero takes flight</p>
+          <h2 id="story-title">Just your<br>friendly<br>neighborhood<br>Spider-Man.</h2>
+        </div>
+        <div class="film-copy">
+          <p>After getting a taste of the big leagues, Peter Parker returns home to Queens, eager to show he can be more than the friendly neighborhood Spider-Man.</p>
+          <p>Balancing school, friends, and superhero life is no easy feat—but when a new threat puts everything he loves at risk, Peter discovers what it really means to be a hero.</p>
+          <a class="button secondary" href="#top">Back to the top <span aria-hidden="true">↑</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>Marvel Studios &nbsp; · &nbsp; Spider-Man: Homecoming</footer>
+  <script>
+    (() => {
+      // --- Flip Card Interaction ---
+      const card = document.querySelector('#flip-card');
+      const hero = document.querySelector('.hero');
+      const filmTitle = document.querySelector('#film-title');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let pinned = false;
+
+      function setFlipped(flipped) {
+        if (!card || !hero || !filmTitle) return;
+        card.classList.toggle('is-flipped', flipped);
+        card.setAttribute('aria-pressed', String(flipped));
+        hero.classList.toggle('is-brand-new-day', flipped);
+        const titleText = flipped ? 'Brand New Day' : 'Homecoming';
+        filmTitle.textContent = titleText;
+        if (typeof triggerTextFormation === 'function') {
+          triggerTextFormation(titleText, true);
+        }
+      }
+
+      function isNearCard(x, y) {
+        if (!card) return false;
+        const rect = card.getBoundingClientRect();
+        const dx = Math.max(rect.left - x, 0, x - rect.right);
+        const dy = Math.max(rect.top - y, 0, y - rect.bottom);
+        return Math.hypot(dx, dy) <= 105;
+      }
+
+      if (card && hero) {
+        window.addEventListener('pointermove', event => {
+          if (event.pointerType !== 'mouse' || pinned || reducedMotion.matches) return;
+          setFlipped(isNearCard(event.clientX, event.clientY));
+        }, { passive: true });
+
+        card.addEventListener('pointerleave', () => {
+          if (!pinned) setFlipped(false);
+        }, { passive: true });
+
+        card.addEventListener('click', () => {
+          pinned = !pinned;
+          setFlipped(pinned);
+        });
+
+        card.addEventListener('keydown', event => {
+          if (event.key === 'Escape' && pinned) {
+            pinned = false;
+            setFlipped(false);
+          }
+        });
+      }
+
+      // --- Galaxy Particle Animation & Custom Boundary Gradient ---
+      const canvas = document.getElementById('galaxy-canvas');
+      if (!canvas || !hero) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+      let animId = null;
+
+      // Mouse tracking
+      const mouse = { x: -9999, y: -9999, active: false };
+
+      // Random cosmic stars matching reference photo 2
+      let stars = [];
+
+      // --- Reactive Text Particles for "HOMECOMING" ---
+      let textParticles = [];
+      let currentTitleText = 'Homecoming';
+      let titleTargetInfo = null;
+      const offCanvas = document.createElement('canvas');
+      const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
+
+      function sampleTextTargets(text) {
+        if (!filmTitle || !hero) return [];
+        const heroRect = hero.getBoundingClientRect();
+        const titleRect = filmTitle.getBoundingClientRect();
+
+        const compStyle = window.getComputedStyle(filmTitle);
+        const fontSize = parseFloat(compStyle.fontSize) || 48;
+        const fontWeight = compStyle.fontWeight || '900';
+        const letterSpacing = compStyle.letterSpacing || 'calc(-0.075em + 2px)';
+
+        const pad = 24;
+        const w = Math.ceil(titleRect.width) + pad * 2;
+        const h = Math.ceil(titleRect.height) + pad * 2;
+        offCanvas.width = Math.max(10, w);
+        offCanvas.height = Math.max(10, h);
+
+        offCtx.clearRect(0, 0, w, h);
+        offCtx.fillStyle = '#ffffff';
+        offCtx.font = `${fontWeight} ${fontSize}px "Orbitron", sans-serif`;
+        offCtx.letterSpacing = letterSpacing;
+        offCtx.textBaseline = 'top';
+        offCtx.textAlign = 'left';
+        offCtx.fillText(text.toUpperCase(), pad, pad);
+
+        const imgData = offCtx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+
+        const originX = titleRect.left - heroRect.left - pad;
+        const originY = titleRect.top - heroRect.top - pad;
+
+        // Store target metadata for accurate glowing text shadow rendering
+        titleTargetInfo = {
+          text: text.toUpperCase(),
+          x: originX + pad,
+          y: originY + pad,
+          fontSize,
+          fontWeight,
+          letterSpacing
+        };
+
+        const targets = [];
+        // High density fine particle grid (1.4px step for 2500+ micro-particles)
+        const step = fontSize > 42 ? 1.45 : 1.25;
+
+        for (let py = 0; py < h; py += step) {
+          for (let px = 0; px < w; px += step) {
+            const index = Math.floor(py) * w * 4 + Math.floor(px) * 4;
+            const alpha = data[index + 3];
+            if (alpha > 105) {
+              targets.push({
+                x: originX + px,
+                y: originY + py
+              });
+            }
+          }
+        }
+        return targets;
+      }
+
+      function triggerTextFormation(text, isTransition = true) {
+        currentTitleText = text || 'Homecoming';
+        const targets = sampleTextTargets(currentTitleText);
+        if (targets.length === 0) return;
+
+        // Shuffle targets for natural, organic convergence from across the whole page
+        for (let i = targets.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const temp = targets[i];
+          targets[i] = targets[j];
+          targets[j] = temp;
+        }
+
+        const newParticles = [];
+        const count = targets.length;
+
+        for (let i = 0; i < count; i++) {
+          const target = targets[i];
+          let startX, startY, vx, vy;
+
+          if (!isTransition && textParticles[i]) {
+            // Keep current location on resize without flying away
+            startX = textParticles[i].x;
+            startY = textParticles[i].y;
+            vx = textParticles[i].vx;
+            vy = textParticles[i].vy;
+          } else {
+            // Slowly formed with fine red particles coming from the whole page
+            const edge = Math.random();
+            if (edge < 0.35) {
+              startX = Math.random() * width;
+              startY = Math.random() < 0.5 ? -25 : height + 25;
+            } else if (edge < 0.70) {
+              startX = Math.random() < 0.5 ? -25 : width + 25;
+              startY = Math.random() * height;
+            } else {
+              startX = Math.random() * width;
+              startY = Math.random() * height;
+            }
+            vx = (Math.random() - 0.5) * 5;
+            vy = (Math.random() - 0.5) * 5;
+          }
+
+          // Finer micro-particles for extreme font fidelity & sharp curves
+          const isSpark = Math.random() < 0.12;
+          const color = isSpark ? '255, 105, 115' : '237, 29, 36';
+          const size = isSpark ? 1.4 : (0.95 + Math.random() * 0.35);
+
+          newParticles.push({
+            x: startX,
+            y: startY,
+            targetX: target.x,
+            targetY: target.y,
+            vx,
+            vy,
+            size,
+            color,
+            alpha: 0.90 + Math.random() * 0.10,
+            delay: Math.floor(Math.random() * 35), // staggered arrivals in waves
+            ease: 0.042 + Math.random() * 0.025,   // smooth organic convergence
+            friction: 0.86
+          });
+        }
+        textParticles = newParticles;
+      }
+
+      // Color palettes sampled directly from reference photo 2:
+      // Cyan/Teal, Lavender/Mauve, Ice-White, and Spider-Man Red accents
+      const starColors = [
+        '109, 154, 157', // Soft cyan/teal
+        '84, 119, 122',  // Deep aquamarine
+        '0, 229, 255',   // Vivid cyan
+        '180, 230, 235', // Ice cyan
+        '135, 120, 156', // Soft lavender/mauve
+        '165, 135, 185', // Radiant lilac
+        '103, 93, 121',  // Deep purple-mauve
+        '228, 252, 255', // Ice diamond white
+        '255, 255, 255', // Pure star white
+        '237, 29, 36',   // Spider-Man red
+        '255, 85, 95'    // Warm ruby
+      ];
+
+      function resize() {
+        const rect = hero.getBoundingClientRect();
+        width = Math.floor(rect.width);
+        height = Math.floor(rect.height);
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        initStars();
+        triggerTextFormation(currentTitleText, false);
+        if (reducedMotion.matches) {
+          render(0);
+        }
+      }
+
+      // Cloud puffs for soft organic nebula diffusion along the margin
+      let cloudPuffs = [];
+
+      function initStars() {
+        stars = [];
+        const isMobile = width < 768;
+        const starCount = isMobile ? 130 : 230;
+
+        for (let i = 0; i < starCount; i++) {
+          stars.push(createStar(true));
+        }
+
+        // Soft organic diffusion puffs along the margin
+        cloudPuffs = [];
+        const puffCount = 8;
+        for (let i = 0; i < puffCount; i++) {
+          cloudPuffs.push({
+            t: i / (puffCount - 1),
+            baseRadius: 180 + Math.random() * 80,
+            phase: Math.random() * Math.PI * 2,
+            pulseSpeed: 0.0006 + Math.random() * 0.0008
+          });
+        }
+      }
+
+      function createStar(initial = false) {
+        const isMobile = width < 768;
+        let x, y;
+
+        if (isMobile) {
+          x = Math.random() * width;
+          y = initial ? Math.random() * (height * 0.58) : Math.random() * 20;
+        } else {
+          y = initial ? Math.random() * height : Math.random() * height;
+          // Confined comfortably to the left text section
+          x = Math.random() * (width * 0.42);
+        }
+
+        // Random pixel sizes matching Image 2 (crisp square/pixel stars)
+        const sizeRoll = Math.random();
+        let size = 1.0;
+        if (sizeRoll < 0.52) {
+          size = 1.0; // Tiny pinpoint
+        } else if (sizeRoll < 0.82) {
+          size = 1.6; // Medium crisp pixel
+        } else if (sizeRoll < 0.94) {
+          size = 2.2; // Prominent star
+        } else {
+          size = 3.0; // Bright primary star
+        }
+
+        const color = starColors[Math.floor(Math.random() * starColors.length)];
+
+        return {
+          x,
+          y,
+          size,
+          color,
+          baseAlpha: 0.25 + Math.random() * 0.70,
+          twinkleSpeed: 0.012 + Math.random() * 0.035,
+          phase: Math.random() * Math.PI * 2,
+          vx: (Math.random() - 0.5) * 0.16,
+          vy: (Math.random() - 0.5) * 0.16,
+          isSquare: size >= 1.6
+        };
+      }
+
+      function render(time) {
+        ctx.clearRect(0, 0, width, height);
+        const isMobile = width < 768;
+
+        // --- LAYER 1: ULTRA-SMOOTH, FEATHERED COSMIC FADE ---
+        // Completely seamless multi-stop S-curve fade; zero sharp margins anywhere
+        ctx.save();
+
+        if (!isMobile) {
+          // 1. Primary horizontal cosmic wash:
+          // Opaque black on the far left, dissolving softly over 280+ pixels into the photo
+          const washWidth = width * 0.52;
+          const baseGrad = ctx.createLinearGradient(0, 0, washWidth, 0);
+          baseGrad.addColorStop(0, 'rgba(6, 6, 8, 0.99)');
+          baseGrad.addColorStop(0.20, 'rgba(10, 6, 10, 0.95)');
+          baseGrad.addColorStop(0.32, 'rgba(22, 6, 12, 0.74)');
+          baseGrad.addColorStop(0.44, 'rgba(40, 6, 14, 0.44)');
+          baseGrad.addColorStop(0.58, 'rgba(48, 7, 16, 0.20)');
+          baseGrad.addColorStop(0.74, 'rgba(28, 5, 10, 0.06)');
+          baseGrad.addColorStop(0.88, 'rgba(12, 3, 5, 0.015)');
+          baseGrad.addColorStop(1, 'rgba(0, 0, 0, 0)'); // fully transparent
+
+          ctx.fillStyle = baseGrad;
+          ctx.fillRect(0, 0, washWidth, height);
+
+          // 2. Soft elliptical cosmic glow behind the title and text for rich depth
+          const glowGrad = ctx.createRadialGradient(
+            width * 0.18, height * 0.34, 0,
+            width * 0.18, height * 0.34, width * 0.28
+          );
+          glowGrad.addColorStop(0, 'rgba(110, 14, 25, 0.24)');
+          glowGrad.addColorStop(0.45, 'rgba(65, 8, 16, 0.12)');
+          glowGrad.addColorStop(0.80, 'rgba(30, 5, 10, 0.03)');
+          glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = glowGrad;
+          ctx.beginPath();
+          ctx.arc(width * 0.18, height * 0.34, width * 0.28, 0, Math.PI * 2);
+          ctx.fill();
+
+          // 3. Soft organic nebula diffusion puffs along the margin (imperceptible blending)
+          for (let i = 0; i < cloudPuffs.length; i++) {
+            const puff = cloudPuffs[i];
+            const puffX = width * (0.32 + 0.08 * Math.sin(time * 0.0004 + puff.phase));
+            const puffY = height * (0.15 + puff.t * 0.72);
+            const radius = puff.baseRadius * (1 + Math.sin(time * puff.pulseSpeed + puff.phase) * 0.12);
+
+            const grad = ctx.createRadialGradient(puffX, puffY, 0, puffX, puffY, radius);
+            grad.addColorStop(0, 'rgba(50, 7, 16, 0.15)');
+            grad.addColorStop(0.5, 'rgba(22, 5, 10, 0.05)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(puffX, puffY, radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // 4. Feather-soft top sky vignette (zero horizontal cutoffs or lines)
+          const topGrad = ctx.createLinearGradient(0, 0, 0, height * 0.15);
+          topGrad.addColorStop(0, 'rgba(7, 6, 8, 0.70)');
+          topGrad.addColorStop(0.35, 'rgba(12, 6, 10, 0.30)');
+          topGrad.addColorStop(0.70, 'rgba(15, 6, 10, 0.07)');
+          topGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = topGrad;
+          ctx.fillRect(0, 0, width, height * 0.15);
+
+        } else {
+          // Mobile: smooth top-to-bottom fade
+          const baseGrad = ctx.createLinearGradient(0, 0, 0, height * 0.65);
+          baseGrad.addColorStop(0, 'rgba(6, 6, 8, 0.99)');
+          baseGrad.addColorStop(0.50, 'rgba(16, 7, 11, 0.90)');
+          baseGrad.addColorStop(0.75, 'rgba(45, 6, 14, 0.40)');
+          baseGrad.addColorStop(0.90, 'rgba(25, 5, 10, 0.10)');
+          baseGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = baseGrad;
+          ctx.fillRect(0, 0, width, height * 0.65);
+        }
+
+        ctx.restore();
+
+        // --- LAYER 2: RANDOM COSMIC STARS (MATCHING REFERENCE PHOTO 2) ---
+        // Soft gradual fade over a wide threshold; completely absent in the rest area
+        for (let i = 0; i < stars.length; i++) {
+          const star = stars[i];
+
+          // Slow floating drift
+          star.x += star.vx;
+          star.y += star.vy;
+
+          const maxStarX = isMobile ? width : width * 0.46;
+
+          // Wrap or bounce within bounds
+          if (star.x < 2) {
+            star.x = 2;
+            star.vx = Math.abs(star.vx);
+          } else if (star.x > maxStarX) {
+            star.x = maxStarX;
+            star.vx = -Math.abs(star.vx);
+          }
+
+          if (star.y < 2) {
+            star.y = 2;
+            star.vy = Math.abs(star.vy);
+          } else if (isMobile && star.y > height * 0.60) {
+            star.y = height * 0.60;
+            star.vy = -Math.abs(star.vy);
+          } else if (!isMobile && star.y > height - 2) {
+            star.y = height - 2;
+            star.vy = -Math.abs(star.vy);
+          }
+
+          // Natural organic twinkling
+          const twinkle = Math.sin(time * star.twinkleSpeed + star.phase);
+          let alpha = Math.min(1.0, Math.max(0.12, star.baseAlpha + twinkle * 0.28));
+
+          // Soft gradual fade as star approaches the margin (over 90px threshold)
+          if (!isMobile) {
+            const distFromEdge = maxStarX - star.x;
+            if (distFromEdge < 90) {
+              const fadeRatio = Math.max(0, distFromEdge / 90);
+              alpha *= Math.pow(fadeRatio, 1.35);
+            }
+          }
+
+          // Mouse proximity reaction (subtle starlight shimmer)
+          if (mouse.active) {
+            const dx = star.x - mouse.x;
+            const dy = star.y - mouse.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 80 && dist > 0) {
+              const repel = (80 - dist) / 80;
+              star.x += (dx / dist) * repel * 1.2;
+              star.y += (dy / dist) * repel * 1.2;
+              alpha = Math.min(1.0, alpha + repel * 0.35);
+            }
+          }
+
+          if (alpha > 0.02) {
+            ctx.fillStyle = `rgba(${star.color}, ${alpha})`;
+
+            // Draw crisp pixel / square star matching reference photo 2
+            if (star.isSquare) {
+              ctx.fillRect(
+                Math.round(star.x - star.size / 2),
+                Math.round(star.y - star.size / 2),
+                star.size,
+                star.size
+              );
+            } else {
+              ctx.fillRect(Math.round(star.x), Math.round(star.y), 1, 1);
+            }
+          }
+        }
+
+        // --- LAYER 3: REACTIVE FINE RED TEXT PARTICLES ("HOMECOMING") ---
+        let assembledCount = 0;
+        for (let i = 0; i < textParticles.length; i++) {
+          const p = textParticles[i];
+          if (Math.abs(p.x - p.targetX) < 12 && Math.abs(p.y - p.targetY) < 12) {
+            assembledCount++;
+          }
+        }
+        const assembledRatio = textParticles.length > 0 ? assembledCount / textParticles.length : 0;
+
+        // Dual-pass cinematic text shadow: deep black contrast drop shadow + Marvel red neon glow
+        if (titleTargetInfo && assembledRatio > 0.08) {
+          ctx.save();
+          ctx.font = `${titleTargetInfo.fontWeight} ${titleTargetInfo.fontSize}px "Orbitron", sans-serif`;
+          ctx.letterSpacing = titleTargetInfo.letterSpacing;
+          ctx.textBaseline = 'top';
+          ctx.textAlign = 'left';
+
+          // Pass 1: Deep contrast black drop shadow
+          ctx.shadowColor = `rgba(0, 0, 0, ${0.95 * assembledRatio})`;
+          ctx.shadowBlur = 14;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 4;
+          ctx.fillStyle = `rgba(0, 0, 0, ${0.85 * assembledRatio})`;
+          ctx.fillText(titleTargetInfo.text, titleTargetInfo.x, titleTargetInfo.y);
+
+          // Pass 2: Vibrant Marvel red neon glow
+          ctx.shadowColor = `rgba(237, 29, 36, ${0.85 * assembledRatio})`;
+          ctx.shadowBlur = 24;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+          ctx.fillStyle = `rgba(237, 29, 36, ${0.28 * assembledRatio})`;
+          ctx.fillText(titleTargetInfo.text, titleTargetInfo.x, titleTargetInfo.y);
+
+          ctx.restore();
+        }
+
+        for (let i = 0; i < textParticles.length; i++) {
+          const p = textParticles[i];
+
+          if (p.delay > 0) {
+            p.delay--;
+            p.x += p.vx * 0.4;
+            p.y += p.vy * 0.4;
+            p.vx *= 0.94;
+            p.vy *= 0.94;
+            continue;
+          }
+
+          // Spring towards target letter pixel
+          const dx = p.targetX - p.x;
+          const dy = p.targetY - p.y;
+
+          const ax = dx * p.ease;
+          const ay = dy * p.ease;
+
+          p.vx = (p.vx + ax) * p.friction;
+          p.vy = (p.vy + ay) * p.friction;
+
+          // Reactive: Cursor Repulsion & Ripple over the text
+          if (mouse.active) {
+            const mdx = p.x - mouse.x;
+            const mdy = p.y - mouse.y;
+            const mDist = Math.hypot(mdx, mdy);
+            if (mDist < 48 && mDist > 0) {
+              const repel = ((48 - mDist) / 48) * 3.8;
+              p.vx += (mdx / mDist) * repel;
+              p.vy += (mdy / mDist) * repel;
+            }
+          }
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Render ultra-fine red particle
+          ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+          ctx.fillRect(
+            Math.round(p.x - p.size / 2),
+            Math.round(p.y - p.size / 2),
+            p.size,
+            p.size
+          );
+        }
+      }
+
+      // Pointer tracking
+      hero.addEventListener('pointermove', event => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = event.clientX - rect.left;
+        mouse.y = event.clientY - rect.top;
+        mouse.active = true;
+      }, { passive: true });
+
+      hero.addEventListener('pointerleave', () => {
+        mouse.active = false;
+      }, { passive: true });
+
+      function loop(timestamp) {
+        if (!document.hidden && !reducedMotion.matches) {
+          render(timestamp);
+        }
+        animId = requestAnimationFrame(loop);
+      }
+
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+
+      if (!reducedMotion.matches) {
+        animId = requestAnimationFrame(loop);
+      }
+
+      reducedMotion.addEventListener('change', e => {
+        if (e.matches) {
+          if (animId) cancelAnimationFrame(animId);
+          render(0);
+        } else {
+          animId = requestAnimationFrame(loop);
+        }
+      });
+
+      // Ensure Orbitron font is ready, then slowly assemble "HOMECOMING" from across the whole page
+      if (document.fonts) {
+        document.fonts.ready.then(() => {
+          setTimeout(() => triggerTextFormation(currentTitleText, true), 80);
+        });
+      } else {
+        setTimeout(() => triggerTextFormation(currentTitleText, true), 200);
+      }
+    })();
+  </script>
+</body>
+</html>
